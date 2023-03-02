@@ -1,8 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Message {
+public class Message implements Serializable {
+
+    protected static final long serialVersionUID = 844977080406428L;
     // the topic for message
     private String topic;
 

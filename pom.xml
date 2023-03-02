@@ -5,20 +5,45 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.qiezi</groupId>
-    <artifactId>OneMq</artifactId>
+    <artifactId>oneMQ</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>mq-store</module>
-        <module>mq-client</module>
-        <module>mq-test</module>
+        <module>mq-example</module>
         <module>mq-broker</module>
+        <module>mq-client</module>
         <module>mq-common</module>
+        <module>mq-store</module>
+        <module>mq-test</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <slf4j-api.version>2.0.3</slf4j-api.version>
+        <logback-classic.version>1.3.4</logback-classic.version>
+        <junit.version>4.13.2</junit.version>
     </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
