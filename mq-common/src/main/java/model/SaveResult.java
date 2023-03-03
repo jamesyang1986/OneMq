@@ -8,4 +8,5 @@ public class SaveResult implements Serializable {
     private String host;
 
     private int partition;
+
 }

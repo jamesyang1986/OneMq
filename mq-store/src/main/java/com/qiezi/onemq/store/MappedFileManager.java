@@ -120,16 +120,11 @@ public class MappedFileManager {
         List<MappedFile> mappedFiles = topicMappedFileMap.get(key);
 
         String fileName = MixUtils.genFormattedName(startPos);
-
         MappedFile targetFile = findMatchedFile(startPos, mappedFiles);
         while (targetFile != null && maxSize > 0) {
-
-
             maxSize--;
         }
-
         return dataList;
-
     }
 
 
@@ -146,7 +141,6 @@ public class MappedFileManager {
 
             String nextFileName = mappedFiles.get(i + 1).getFileName();
             long bPos = Long.parseLong(nextFileName);
-
             if (aPos <= startPos && startPos < bPos) {
                 targetFile = mappedFiles.get(i);
                 break;

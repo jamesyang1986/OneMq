@@ -1,6 +1,7 @@
 package com.qiezi.onemq.store;
 
 import com.qiezi.onemq.StoreConfig;
+import com.qiezi.onemq.enums.FileSyncType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +28,9 @@ public class MappedFile {
     private long msgCount;
     private boolean isFull = false;
 
-    private static Logger LOG = LoggerFactory.getLogger(MappedFile.class);
-
+    private FileSyncType syncType = FileSyncType.ASYNC;
     public static final int OS_PAGE_SIZE = 4 * 1024;
+    private static Logger LOG = LoggerFactory.getLogger(MappedFile.class);
 
     public MappedFile(String topic, int partition, long startOffset) throws IOException {
         this.topic = topic;
@@ -61,8 +62,6 @@ public class MappedFile {
             });
             thread.setName("disk-syncer-" + this.file.getName());
             thread.start();
-
-
         } catch (Exception e) {
             LOG.error("fail to create mapped file, topic:{}, partition:{},startOffset:{}",
                     topic, partition, startOffset, e);
@@ -98,8 +97,9 @@ public class MappedFile {
         this.writeOffset += size;
         this.msgCount++;
 
-//        sync2Disk();
-
+        if (syncType == FileSyncType.SYNC) {
+            this.mappedByteBuffer.force();
+        }
         return true;
     }
 
@@ -121,7 +121,6 @@ public class MappedFile {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
             }
-
         }
     }
 
@@ -130,7 +129,6 @@ public class MappedFile {
         if (writeOffset != 0 && (pos + readSize > writeOffset)) {
             throw new RuntimeException("read out of index for file length.");
         }
-
         ByteBuffer returnData = ByteBuffer.allocate(readSize);
         try {
             int readNum = this.fileChannel.read(returnData, pos);
