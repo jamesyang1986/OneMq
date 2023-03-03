@@ -9,6 +9,7 @@ public class MessageInner extends Message {
 
     private String broker;
 
+    private long physicalOffset;
 
     public String getMessageId() {
         return messageId;
@@ -40,5 +41,14 @@ public class MessageInner extends Message {
 
     public void setBroker(String broker) {
         this.broker = broker;
+    }
+
+
+    public long getPhysicalOffset() {
+        return physicalOffset;
+    }
+
+    public void setPhysicalOffset(long physicalOffset) {
+        this.physicalOffset = physicalOffset;
     }
 }
