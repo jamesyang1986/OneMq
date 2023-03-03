@@ -11,10 +11,6 @@ public class DefaultMessageStore implements MessageStore {
     public SaveResult saveMsg(MessageInner msg) {
         String topic = msg.getTopic();
         int partion = msg.getPartition();
-
-
-
-
         return null;
     }
 

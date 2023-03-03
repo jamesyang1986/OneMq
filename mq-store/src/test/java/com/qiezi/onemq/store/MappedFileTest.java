@@ -7,7 +7,6 @@ import java.nio.ByteBuffer;
 import static org.junit.Assert.assertEquals;
 
 public class MappedFileTest {
-
     public static final String testStr = "asdfdasfadsfqwreqwrq3asdfadsfasdf";
 
     @org.junit.Before
@@ -20,15 +19,20 @@ public class MappedFileTest {
 
     @org.junit.Test
     public void saveData() {
-
+        System.out.println("test msg size:" + testStr.getBytes().length);
         MappedFile file = null;
-        try {
-            file = new MappedFile("test-topic", 0, 0);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        for(int i = 0; i< 100000; i++){
-            writeMsg(file, testStr);
+        for (int i = 0; i < 1000000000; i++) {
+            try {
+                file = MappedFileManager.getTopicLatestFile("test2-topic", 0);
+                boolean result = writeMsg(file, testStr + "--------" + i);
+                if (!result && file.isFull()) {
+                    file = MappedFileManager.getTopicLatestFile("test2-topic", 0);
+                    System.out.println("use new file to create :" + file.getFileName());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
         }
         String msg = readOneMsg(file, 0);
         assertEquals(testStr, msg);
@@ -62,7 +66,7 @@ public class MappedFileTest {
     }
 
 
-    private void writeMsg(MappedFile file, String contents) {
+    private boolean writeMsg(MappedFile file, String contents) {
         ByteBuffer header = ByteBuffer.allocate(4 + 4);
         header.put((byte) 0xAA);
         header.put((byte) 0xBB);
@@ -81,8 +85,7 @@ public class MappedFileTest {
             toSaveBuffer.put(header.array());
             toSaveBuffer.put(data);
 
-            file.saveData(toSaveBuffer);
-
+            return file.saveData(toSaveBuffer);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -90,7 +93,6 @@ public class MappedFileTest {
 
     @org.junit.Test
     public void readOneMsg() {
-
         MappedFile file = null;
         try {
             file = new MappedFile("test-topic", 0, 0);
